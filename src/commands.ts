@@ -1,4 +1,4 @@
-import { getState, setUsername } from './store';
+import { getState, setUsername, setTheme } from './store';
 
 interface Command {
   name: string;
@@ -13,12 +13,45 @@ const registerCommand = (command: Command) => {
   commands[command.name] = command;
 };
 
+const availableThemes = ['dark', 'light', 'ubuntu'];
+
 // Help command
 registerCommand({
   name: 'help',
-  description: 'Shows a list of available commands.',
+  description: 'Shows this help menu.',
   execute: () => {
-    return 'Available commands:\n' + Object.values(commands).map(c => `  ${c.name}: ${c.description}`).join('\n');
+    let helpText = 'Terminal Help Menu:\n\n';
+
+    const generalCommands = [
+      'about', 'projects', 'contact', 'social', 'help'
+    ];
+    const customizationCommands = [
+      'theme', 'set', 'username'
+    ];
+    const utilityCommands = [
+      'date', 'time'
+    ];
+
+    const formatCommands = (cmds: string[], title: string) => {
+      let section = `${title}\n\n`;
+      const maxLength = Math.max(...cmds.map(cmd => commands[cmd] ? commands[cmd].name.length : 0));
+      cmds.forEach(cmdName => {
+        const cmd = commands[cmdName];
+        if (cmd) {
+          const padding = ' '.repeat(maxLength - cmd.name.length + 4);
+          section += `${cmd.name}${padding}- ${cmd.description}\n\n`;
+        }
+      });
+      return section;
+    };
+
+    helpText += formatCommands(generalCommands, 'General Commands');
+    helpText += formatCommands(customizationCommands, 'Customization');
+    helpText += formatCommands(utilityCommands, 'Fun & Utility');
+
+    helpText += '\nTip: Use Tab for auto-completion and arrow keys to navigate command history.';
+
+    return helpText;
   },
 });
 
@@ -26,7 +59,7 @@ registerCommand({
 registerCommand({
     name: 'about',
     description: 'Displays information about me.',
-    execute: () => 'This is a placeholder for your bio. You can edit this in src/commands.ts',
+    execute: () => 'Développeur web de 20 ans, passionné par la création de sites modernes et fonctionnels. Après un Bac+2 incluant une année en MMi et deux ans à l’école de programmation La Plateforme à Toulon, j’ai acquis des compétences solides en développement front-end et back-end. Curieux et rigoureux, je suis toujours à la recherche de nouveaux défis pour concevoir des solutions web performantes et sur mesure.',
 });
 
 // Projects command
@@ -47,7 +80,7 @@ registerCommand({
 registerCommand({
     name: 'contact',
     description: 'Shows my contact information.',
-    execute: () => 'Email: your.email@example.com',
+    execute: () => 'Email: esteban.h0207@gmail.com',
 });
 
 // Date command
@@ -71,6 +104,15 @@ registerCommand({
   execute: () => `Current username is: ${getState().username}`,
 });
 
+// Theme command
+registerCommand({
+  name: 'theme',
+  description: `Lists available themes. Current theme: ${getState().theme}`,
+  execute: () => {
+    return `Available themes: ${availableThemes.join(', ')}`;
+  },
+});
+
 // Set command
 registerCommand({
   name: 'set',
@@ -80,7 +122,7 @@ registerCommand({
     const joinedValue = value.join(' ');
 
     if (!property) {
-      return 'Usage: set <property> <value>. Available properties: username';
+      return 'Usage: set <property> <value>. Available properties: username, theme';
     }
 
     switch (property.toLowerCase()) {
@@ -90,6 +132,15 @@ registerCommand({
         }
         setUsername(joinedValue);
         return `Username set to: ${joinedValue}`;
+      case 'theme':
+        if (!joinedValue) {
+          return `Usage: set theme <theme_name>. Available themes: ${availableThemes.join(', ')}`;
+        }
+        if (!availableThemes.includes(joinedValue.toLowerCase())) {
+            return `Theme not found. Available themes: ${availableThemes.join(', ')}`;
+        }
+        setTheme(joinedValue.toLowerCase());
+        return `Theme set to: ${joinedValue}`;
       default:
         return `Unknown property: ${property}`;
     }
@@ -107,3 +158,5 @@ export const executeCommand = (input: string): string => {
     return `command not found: ${commandName}`;
   }
 };
+
+export const commandList = Object.keys(commands);

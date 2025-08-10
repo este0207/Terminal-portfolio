@@ -1,16 +1,18 @@
 body {
-  background-color: #000;
-  color: rgb(255, 255, 255);
   font-family: 'Courier New', Courier, monospace;
   font-size: 16px;
   margin: 0;
   padding: 20px;
+  overflow: hidden;
+  background-color: var(--background-color, #000);
 }
 
 .terminal {
+  background-color: var(--background-color, #000);
+  color: var(--text-color, #0f0);
+  border: 1px solid var(--border-color, #0f0);
   width: 100%;
   height: 100vh;
-  border: 1px solid rgb(255, 255, 255);
   padding: 10px;
   box-sizing: border-box;
   overflow-y: scroll;
@@ -26,13 +28,14 @@ body {
 }
 
 .prompt {
+  color: var(--prompt-color, #0f0);
   margin-right: 10px;
 }
 
 input[type="text"] {
   background-color: transparent;
   border: none;
-  color: rgb(255, 255, 255);
+  color: var(--text-color, #0f0);
   font-family: inherit;
   font-size: inherit;
   width: 100%;
@@ -40,4 +43,26 @@ input[type="text"] {
 
 input[type="text"]:focus {
   outline: none;
+}
+
+/* Suggestions styles */
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 5px;
+  padding-left: calc(var(--prompt-width, 0px) + 10px); /* Align with input */
+}
+
+.suggestion-item {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-color, #0f0);
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }

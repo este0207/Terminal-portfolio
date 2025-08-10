@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { executeCommand } from './commands';
+import React, { useState, useEffect, useRef } from 'react';
+import { executeCommand, commandList } from './commands';
 import { useStore } from './useStore';
 
 const Terminal: React.FC = () => {
@@ -7,15 +7,45 @@ const Terminal: React.FC = () => {
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [input, setInput] = useState('');
-  const { username } = useStore();
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const { username, theme } = useStore();
   const host = 'estebanh.me';
+  const promptRef = useRef<HTMLSpanElement>(null); 
+
+  useEffect(() => {
+    if (promptRef.current) {
+
+      document.documentElement.style.setProperty(
+        '--prompt-width',
+        `${promptRef.current.offsetWidth}px`
+      );
+    }
+  }, [username]); 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
+    const value = e.target.value;
+    setInput(value);
+
+    if (value.trim()) {
+      const filteredSuggestions = commandList.filter(cmd =>
+        cmd.startsWith(value.trim().toLowerCase())
+      );
+      setSuggestions(filteredSuggestions);
+    } else {
+      setSuggestions([]);
+    }
   };
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'ArrowUp') {
+    if (e.key === 'Tab') {
+        e.preventDefault();
+        const currentInput = input.trim();
+        const filteredSuggestions = commandList.filter(cmd => cmd.startsWith(currentInput.toLowerCase()));
+        if (filteredSuggestions.length === 1) {
+            setInput(filteredSuggestions[0] + ' ');
+            setSuggestions([]);
+        }
+    } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (historyIndex < commandHistory.length - 1) {
         const newIndex = historyIndex + 1;
@@ -28,9 +58,6 @@ const Terminal: React.FC = () => {
         const newIndex = historyIndex - 1;
         setHistoryIndex(newIndex);
         setInput(commandHistory[commandHistory.length - 1 - newIndex]);
-      } else if (historyIndex <= 0) {
-        setHistoryIndex(-1);
-        setInput('');
       }
     } else if (e.key === 'Enter') {
       const prompt = `${username}@${host}:~$`;
@@ -41,6 +68,7 @@ const Terminal: React.FC = () => {
         setCommandHistory(newCommandHistory);
       }
       setHistoryIndex(-1);
+      setSuggestions([]);
 
 
       if (fullCommand.toLowerCase() === 'clear') {
@@ -60,16 +88,16 @@ const Terminal: React.FC = () => {
   };
 
   return (
-    <div className="terminal">
+    <div className="terminal" data-theme={theme}>
       <div className="terminal-output">
-        <p>Welcome to your Terminal Portfolio!</p>
+        <p>Welcome to my Terminal Portfolio!</p>
         <p>Type 'help' to see available commands.</p>
         {history.map((line, index) => (
           <p key={index}>{line}</p>
         ))}
       </div>
       <div className="terminal-input">
-        <span className="prompt">{`${username}@${host}:~$`}</span>
+        <span className="prompt" ref={promptRef}>{`${username}@${host}:~$`}</span>
         <input
           type="text"
           autoFocus
@@ -78,6 +106,13 @@ const Terminal: React.FC = () => {
           onKeyDown={handleInputKeyDown}
         />
       </div>
+      {suggestions.length > 0 && (
+        <div className="suggestions">
+          {suggestions.map((s, i) => (
+            <span key={i} className="suggestion-item">{s}</span>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -1,0 +1,23 @@
+/* Default (dark) theme, and fallback */
+.terminal[data-theme='dark'] {
+  --background-color: #000;
+  --text-color: #0f0;
+  --prompt-color: #0f0;
+  --border-color: #0f0;
+}
+
+/* Light theme */
+.terminal[data-theme='light'] {
+  --background-color: #f0f0f0;
+  --text-color: #333;
+  --prompt-color: #007bff;
+  --border-color: #ccc;
+}
+
+/* Ubuntu theme */
+.terminal[data-theme='ubuntu'] {
+  --background-color: #300a24;
+  --text-color: #fff;
+  --prompt-color: #87d37c;
+  --border-color: #300a24;
+}

@@ -1,20 +1,20 @@
 type State = {
   username: string;
-  theme: string; // Will be used later
+  theme: string; 
 };
 
 type Listener = () => void;
 
 let state: State = {
   username: 'visitor',
-  theme: 'dark',
+  theme: 'ubuntu',
 };
 
 const listeners: Set<Listener> = new Set();
 
 export const subscribe = (listener: Listener) => {
   listeners.add(listener);
-  return () => listeners.delete(listener); // Unsubscribe function
+  return () => listeners.delete(listener);
 };
 
 const notify = () => {

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { executeCommand, commandList } from './commands';
 import { useStore } from './useStore';
 
-
 const Terminal: React.FC = () => {
   const [history, setHistory] = useState<string[]>([]);
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
@@ -21,6 +20,17 @@ const Terminal: React.FC = () => {
       );
     }
   }, [username]);
+
+  const renderWithLinks = (text: string) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = text.split(urlRegex);
+    return parts.map((part, i) => {
+      if (part.match(urlRegex)) {
+        return <a key={i} href={part} target="_blank" rel="noopener noreferrer">{part}</a>;
+      }
+      return part;
+    });
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -90,10 +100,10 @@ const Terminal: React.FC = () => {
   return (
     <div className="terminal" data-theme={theme}>
       <div className="terminal-output">
-        <p>Welcome to my Terminal Portfolio!</p>
+        <p>Welcome to your Terminal Portfolio!</p>
         <p>Type 'help' to see available commands.</p>
         {history.map((line, index) => (
-          <p key={index}>{line}</p>
+          <p key={index}>{renderWithLinks(line)}</p>
         ))}
       </div>
       <div className="terminal-input">

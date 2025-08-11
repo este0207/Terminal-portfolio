@@ -66,14 +66,14 @@ registerCommand({
 registerCommand({
     name: 'projects',
     description: 'Lists major professional & personal projects.',
-    execute: () => 'Project 1: Terminal Portfolio\nProject 2: Coming soon...', 
+    execute: () => 'Here are some of my projects:\n\n- Terminal Portfolio: You are here!\n- Personal Portfolio: https://estebanh.studio',
 });
 
 // Social command
 registerCommand({
     name: 'social',
     description: 'Displays my social media profiles.',
-    execute: () => 'GitHub: \nLinkedIn: \nTwitter: ',
+    execute: () => 'You can find me on:\n\n- GitHub: https://github.com/este0207\n- Instagram: https://www.instagram.com/esteban_h072/',
 });
 
 // Contact command

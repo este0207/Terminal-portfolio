@@ -32,6 +32,10 @@ body {
   margin-right: 10px;
 }
 
+a{
+  color: rgb(154, 154, 251);
+}
+
 input[type="text"] {
   background-color: transparent;
   border: none;

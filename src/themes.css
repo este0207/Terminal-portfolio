@@ -21,3 +21,59 @@
   --prompt-color: #87d37c;
   --border-color: #300a24;
 }
+
+/* Dracula theme */
+.terminal[data-theme='dracula'] {
+  --background-color: #282a36;
+  --text-color: #f8f8f2;
+  --prompt-color: #50fa7b;
+  --border-color: #bd93f9;
+}
+
+/* Solarized Light theme */
+.terminal[data-theme='solarized-light'] {
+  --background-color: #fdf6e3;
+  --text-color: #657b83;
+  --prompt-color: #859900;
+  --border-color: #93a1a1;
+}
+
+/* Solarized Dark theme */
+.terminal[data-theme='solarized-dark'] {
+  --background-color: #002b36;
+  --text-color: #839496;
+  --prompt-color: #586e75;
+  --border-color: #073642;
+}
+
+/* Monokai theme */
+.terminal[data-theme='monokai'] {
+  --background-color: #272822;
+  --text-color: #f8f8f2;
+  --prompt-color: #a6e22e;
+  --border-color: #ae81ff;
+}
+
+/* GitHub Light theme */
+.terminal[data-theme='github-light'] {
+  --background-color: #ffffff;
+  --text-color: #24292e;
+  --prompt-color: #0366d6;
+  --border-color: #e1e4e8;
+}
+
+/* GitHub Dark theme */
+.terminal[data-theme='github-dark'] {
+  --background-color: #24292e;
+  --text-color: #e1e4e8;
+  --prompt-color: #79b8ff;
+  --border-color: #444c56;
+}
+
+/* Nord theme */
+.terminal[data-theme='nord'] {
+  --background-color: #2e3440;
+  --text-color: #eceff4;
+  --prompt-color: #88c0d0;
+  --border-color: #4c566a;
+}

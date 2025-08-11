@@ -3,7 +3,7 @@ import { getState, setUsername, setTheme } from './store';
 interface Command {
   name: string;
   description: string;
-  execute: (args: string[]) => string;
+  execute: (args: string[]) => string | Promise<string>;
 }
 
 const commands: Record<string, Command> = {};
@@ -13,7 +13,7 @@ const registerCommand = (command: Command) => {
   commands[command.name] = command;
 };
 
-const availableThemes = ['dark', 'light', 'ubuntu'];
+const availableThemes = ['dark', 'light', 'ubuntu', 'dracula', 'solarized-light', 'solarized-dark', 'monokai', 'github-light', 'github-dark', 'nord'];
 
 // Help command
 registerCommand({
@@ -29,7 +29,7 @@ registerCommand({
       'theme', 'set', 'username'
     ];
     const utilityCommands = [
-      'date', 'time'
+      'date', 'time', 'clear'
     ];
 
     const formatCommands = (cmds: string[], title: string) => {
@@ -97,6 +97,15 @@ registerCommand({
     execute: () => new Date().toLocaleTimeString(),
 });
 
+// Clear command
+registerCommand({
+    name: 'clear',
+    description: 'Clears the terminal screen.',
+    execute: () => {
+        return '';
+    },
+});
+
 // Username command
 registerCommand({
   name: 'username',
@@ -112,6 +121,9 @@ registerCommand({
     return `Available themes: ${availableThemes.join(', ')}`;
   },
 });
+
+
+
 
 // Set command
 registerCommand({
@@ -148,12 +160,17 @@ registerCommand({
 });
 
 
-export const executeCommand = (input: string): string => {
+export const executeCommand = async (input: string): Promise<string> => {
   const [commandName, ...args] = input.trim().toLowerCase().split(/\s+/);
   const command = commands[commandName];
 
   if (command) {
-    return command.execute(args);
+    try {
+      const result = await command.execute(args);
+      return result;
+    } catch (error: any) {
+      return `Error executing command: ${error.message || error}`;
+    }
   } else {
     return `command not found: ${commandName}`;
   }

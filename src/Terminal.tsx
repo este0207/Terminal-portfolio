@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { executeCommand, commandList } from './commands';
 import { useStore } from './useStore';
 
+
 const Terminal: React.FC = () => {
   const [history, setHistory] = useState<string[]>([]);
   const [commandHistory, setCommandHistory] = useState<string[]>([]);
@@ -10,17 +11,16 @@ const Terminal: React.FC = () => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const { username, theme } = useStore();
   const host = 'estebanh.me';
-  const promptRef = useRef<HTMLSpanElement>(null); 
+  const promptRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     if (promptRef.current) {
-
       document.documentElement.style.setProperty(
         '--prompt-width',
         `${promptRef.current.offsetWidth}px`
       );
     }
-  }, [username]); 
+  }, [username]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -36,7 +36,7 @@ const Terminal: React.FC = () => {
     }
   };
 
-  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleInputKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Tab') {
         e.preventDefault();
         const currentInput = input.trim();
@@ -78,7 +78,7 @@ const Terminal: React.FC = () => {
       }
 
       const newHistory = [...history, `${prompt} ${fullCommand}`];
-      const output = executeCommand(fullCommand);
+      const output = await executeCommand(fullCommand);
       const outputLines = output.split('\n');
       newHistory.push(...outputLines);
 
